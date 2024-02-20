@@ -79,7 +79,27 @@ document.addEventListener("DOMContentLoaded", function() {
           intoleranceElement.textContent = "Intolerancias: " + item.intolerancia.join(", ");
 
           const favoriteButton = document.createElement("button");
-          favoriteButton.textContent = "Agregar a favoritos";
+    favoriteButton.textContent = localStorage.getItem(item.nombre) === 'true' ? 'Quitar de favoritos' : 'Agregar a favoritos';
+    favoriteButton.dataset.favorite = localStorage.getItem(item.nombre) === 'true' ? 'true' : 'false';
+    if (favoriteButton.dataset.favorite === 'true') {
+        favoriteButton.style.backgroundColor = 'yellow';
+        favoriteButton.style.color = 'black';
+    }
+    favoriteButton.addEventListener('click', () => {
+        if (favoriteButton.dataset.favorite === 'true') {
+            favoriteButton.dataset.favorite = 'false';
+            favoriteButton.style.backgroundColor = '';
+            favoriteButton.style.color = '';
+            favoriteButton.textContent = 'Agregar a favoritos';
+            localStorage.setItem(item.nombre, 'false');
+        } else {
+            favoriteButton.dataset.favorite = 'true';
+            favoriteButton.style.backgroundColor = 'yellow';
+            favoriteButton.style.color = 'black';
+            favoriteButton.textContent = 'Quitar de favoritos';
+            localStorage.setItem(item.nombre, 'true');
+        }
+    });
 
           menuItemElement.appendChild(imageElement);
           menuItemElement.appendChild(nameElement);
@@ -126,6 +146,8 @@ document.addEventListener("DOMContentLoaded", function() {
       localStorage.setItem('filteredItems', JSON.stringify(filteredItems));
   }
 
+
+
   // Función para ordenar los elementos según el precio
   function sortMenuItems(ascending) {
       menuItems.sort((a, b) => {
@@ -147,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function() {
           renderMenuItems(filteredItems);
 
       }
-      
+
       // Restaurar el estado de los checkboxes desde el almacenamiento local
       veganCheckbox.checked = JSON.parse(localStorage.getItem('veganCheckbox')) || false;
       celiacCheckbox.checked = JSON.parse(localStorage.getItem('celiacCheckbox')) || false;
